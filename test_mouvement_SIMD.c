@@ -1,8 +1,6 @@
-#include "algo.h"
+#include "valgo.h"
 #include "vnrdef.h"
 #include "vnrutil.h"
-
-vuint8 vmulq_sat_u8(vuint8 a, vuint8 b);
 
 vuint8 SD_test_simd_step1(vuint8 m, vuint8 i) {
 	vuint8 zero = vmovq_n_u8(0);
