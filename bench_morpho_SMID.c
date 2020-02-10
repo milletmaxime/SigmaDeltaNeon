@@ -8,7 +8,7 @@
 
 int main()
 {
-	printf("Algorithme\t\tCycles\t\tPoints\t\tppc\n");
+	printf("Algorithme\t\tCycles\t\tPoints\t\tcpp\n");
 
 	int i0, i1, j0, j1;
 	int vi0, vi1, vj0, vj1;
@@ -29,9 +29,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_SIMD(m,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_SIMD(m,vi0,vi1,vj0,vj1),nb_cycles);
 
-		printf("erosion_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(E, vi0-1,vi1+1,vj0-1,vj1+1);
 	}
@@ -42,9 +42,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_SIMD_reduction(m,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_SIMD_reduction(m,vi0,vi1,vj0,vj1),nb_cycles);
 
-		printf("erosion_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(E, vi0-1,vi1+1,vj0-1,vj1+1);
 	}
@@ -55,9 +55,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_SIMD_reduction_deroulage(m,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_SIMD_reduction_deroulage(m,vi0,vi1,vj0,vj1),nb_cycles);
 
-		printf("erosion_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(E, vi0-1,vi1+1,vj0-1,vj1+1);
 	}
@@ -68,9 +68,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_SIMD_openmp(m,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_SIMD_openmp(m,vi0,vi1,vj0,vj1),nb_cycles);
 
-		printf("erosion_SIMD_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_SIMD_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(E, vi0-1,vi1+1,vj0-1,vj1+1);
 	}
@@ -81,9 +81,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_SIMD(m,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_SIMD(m,vi0,vi1,vj0,vj1),nb_cycles);
 
-		printf("dilatation_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(D, vi0-1, vi1+1, vj0-1, vj1+1);
 	}
@@ -94,9 +94,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_SIMD_reduction(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_SIMD_reduction(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(D, vi0-1, vi1+1, vj0-1, vj1+1);
 	}
@@ -107,9 +107,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_SIMD_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_SIMD_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(D, vi0-1, vi1+1, vj0-1, vj1+1);
 	}
@@ -120,9 +120,9 @@ int main()
 		nb_cycles = 0;
 		vuint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_SIMD_openmp(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_SIMD_openmp(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_SIMD_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_SIMD_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_vui8matrix(D, vi0-1, vi1+1, vj0-1, vj1+1);
 	}

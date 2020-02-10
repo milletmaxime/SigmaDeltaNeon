@@ -343,17 +343,17 @@ int main() {
 
     double cycles;
     
-	CHRONO_CYCLE_AARCH64(erosion(test, 0,m,0,m),cycles);
+	CHRONO_CYCLE(erosion(test, 0,m,0,m),cycles);
 	printf("cycles = %f\n",  cycles);
 	
 	cycles = 0;
-	CHRONO_CYCLE_AARCH64(dilatation(test, 0,m,0,m),cycles);
+	CHRONO_CYCLE(dilatation(test, 0,m,0,m),cycles);
 	printf("cycles = %f\n",  cycles);
 	cycles = 0;
-	CHRONO_CYCLE_AARCH64(dilatation_reduction(test, 0,m,0,m),cycles);
+	CHRONO_CYCLE(dilatation_reduction(test, 0,m,0,m),cycles);
 	printf("cycles = %f\n",  cycles);
 	cycles = 0;
-	CHRONO_CYCLE_AARCH64(dilatation_reduction_deroulage(test, 0,m,0,m),cycles);
+	CHRONO_CYCLE(dilatation_reduction_deroulage(test, 0,m,0,m),cycles);
 	printf("cycles = %f\n",  cycles);
 	
 	

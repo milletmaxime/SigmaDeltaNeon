@@ -9,7 +9,7 @@
 
 int main()
 {
-	printf("Algorithme\t\tCycles\t\tPoints\t\tppc\n");
+	printf("Algorithme\t\tCycles\t\tPoints\t\tcpp\n");
 
 	vuint8 **I, **M, **O, **V, **E;
 	uint8 n = 3;
@@ -39,17 +39,17 @@ int main()
 
 		nb_cycles = 0;
 
-		CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration(I,M,O,V,E,n,vi0,vi1,vj0,vj1),nb_cycles);
+		CHRONO_CYCLE(sigma_delta_SIMD_iteration(I,M,O,V,E,n,vi0,vi1,vj0,vj1),nb_cycles);
 
 		// Ajoute un bord à la sortie de SD
 		cpy= (vuint8**)vui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 		copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 		// Enchainement des morphos
-		CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E1 = erosion_SIMD(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D1 = dilatation_SIMD(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D2 = dilatation_SIMD(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E2 = erosion_SIMD(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 		free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 		free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -63,17 +63,17 @@ int main()
 			sprintf(buffer, "./car3/car_%i.pgm", i);
 			MLoadPGM_ui8matrix(buffer, i0, i1, j0, j1, (uint8**)I);
 
-			CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+			CHRONO_CYCLE(sigma_delta_SIMD_iteration(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 			// Ajout du bord à la sortie SD
 			cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 			copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 			// Enchainement des morphos
-			CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E1 = erosion_SIMD(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D1 = dilatation_SIMD(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D2 = dilatation_SIMD(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E2 = erosion_SIMD(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 			free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -81,7 +81,7 @@ int main()
 			free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
 		}
-		printf("sigma_delta_SIMD_iteration+E-D-D-E_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("sigma_delta_SIMD_iteration+E-D-D-E_SIMD\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		sigma_delta_SIMD_free(I,M,O,V,E,i0,i1,j0,j1);
 	}
@@ -93,17 +93,17 @@ int main()
 
 		sigma_delta_SIMD_initialisation(src, &I ,&M , &O, &V, &E, i0, i1, j0, j1, &vi0, &vi1, &vj0, &vj1);
 
-		CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+		CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 		// Ajoute un bord à la sortie de SD
 		cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 		copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 		// Enchainement des morphos
-		CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_reduction(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_reduction(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_reduction(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_reduction(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E1 = erosion_SIMD_reduction(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D1 = dilatation_SIMD_reduction(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D2 = dilatation_SIMD_reduction(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E2 = erosion_SIMD_reduction(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 		free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 		free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -117,17 +117,17 @@ int main()
 			sprintf(buffer, "./car3/car_%i.pgm", i);
 			MLoadPGM_ui8matrix(buffer, i0, i1, j0, j1, (uint8**)I);
 
-			CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+			CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 			// Ajout du bord à la sortie SD
 			cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 			copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 			// Enchainement des morphos
-			CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_reduction(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_reduction(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_reduction(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_reduction(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E1 = erosion_SIMD_reduction(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D1 = dilatation_SIMD_reduction(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D2 = dilatation_SIMD_reduction(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E2 = erosion_SIMD_reduction(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 			free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -135,7 +135,7 @@ int main()
 			free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
 		}
-		printf("sigma_delta_SIMD_iteration_prodcons+E-D-D-E_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("sigma_delta_SIMD_iteration_prodcons+E-D-D-E_SIMD_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		sigma_delta_SIMD_free(I,M,O,V,E,i0,i1,j0,j1);
 	}
@@ -147,17 +147,17 @@ int main()
 
 		sigma_delta_SIMD_initialisation(src, &I ,&M , &O, &V, &E, i0, i1, j0, j1, &vi0, &vi1, &vj0, &vj1);
 
-		CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+		CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 		// Ajoute un bord à la sortie de SD
 		cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 		copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 		// Enchainement des morphos
-		CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_reduction_deroulage(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_reduction_deroulage(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_reduction_deroulage(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_reduction_deroulage(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E1 = erosion_SIMD_reduction_deroulage(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D1 = dilatation_SIMD_reduction_deroulage(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D2 = dilatation_SIMD_reduction_deroulage(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E2 = erosion_SIMD_reduction_deroulage(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 		free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 		free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -171,17 +171,17 @@ int main()
 			sprintf(buffer, "./car3/car_%i.pgm", i);
 			MLoadPGM_ui8matrix(buffer, i0, i1, j0, j1, (uint8**)I);
 
-			CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+			CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 			// Ajout du bord à la sortie SD
 			cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 			copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 			// Enchainement des morphos
-			CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_reduction_deroulage(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_reduction_deroulage(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_reduction_deroulage(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_reduction_deroulage(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E1 = erosion_SIMD_reduction_deroulage(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D1 = dilatation_SIMD_reduction_deroulage(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D2 = dilatation_SIMD_reduction_deroulage(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E2 = erosion_SIMD_reduction_deroulage(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 			free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -189,29 +189,29 @@ int main()
 			free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
 		}
-		printf("sigma_delta_SIMD_iteration_prodcons+E-D-D-E_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("sigma_delta_SIMD_iteration_prodcons+E-D-D-E_SIMD_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		sigma_delta_SIMD_free(I,M,O,V,E,i0,i1,j0,j1);
 	}
 
-	// SD producteur consommateur et morpho openmp
+	// SD producteur consommateur openmp et morpho openmp
 	for(int i = 0; i<NB_REPETITION_BENCH; i++)
 	{
 		nb_cycles = 0;
 
 		sigma_delta_SIMD_initialisation(src, &I ,&M , &O, &V, &E, i0, i1, j0, j1, &vi0, &vi1, &vj0, &vj1);
 
-		CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+		CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons_openmp(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
 
 		// Ajoute un bord à la sortie de SD
 		cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 		copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 		// Enchainement des morphos
-		CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-		CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 		free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 		free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -225,17 +225,17 @@ int main()
 			sprintf(buffer, "./car3/car_%i.pgm", i);
 			MLoadPGM_ui8matrix(buffer, i0, i1, j0, j1, (uint8**)I);
 
-			CHRONO_CYCLE_AARCH64(sigma_delta_SIMD_iteration_prodcons(I,M,O,V,E,n,vi0,vi1,vj0,vj1),nb_cycles);
+			CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons_openmp(I,M,O,V,E,n,vi0,vi1,vj0,vj1),nb_cycles);
 
 			// Ajout du bord à la sortie SD
 			cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
 			copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
 
 			// Enchainement des morphos
-			CHRONO_CYCLE_AARCH64(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
-			CHRONO_CYCLE_AARCH64(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
 
 			free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
@@ -243,7 +243,60 @@ int main()
 			free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
 			free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
 		}
-		printf("sigma_delta_simd_iteration_prodcons+E-D-D-E_simd_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("sigma_delta_SIMD_iteration_prodcons_openmp+E-D-D-E_simd_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
+		sigma_delta_SIMD_free(I,M,O,V,E,i0,i1,j0,j1);
+	}
+
+	// SD producteur consommateur openmp collapsed et morpho openmp
+	for(int i = 0; i<NB_REPETITION_BENCH; i++)
+	{
+		nb_cycles = 0;
+
+		sigma_delta_SIMD_initialisation(src, &I ,&M , &O, &V, &E, i0, i1, j0, j1, &vi0, &vi1, &vj0, &vj1);
+
+		CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons_openmp_collapsed(I,M,O,V,E,n,vi0, vi1, vj0, vj1),nb_cycles);
+
+		// Ajoute un bord à la sortie de SD
+		cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
+		copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
+
+		// Enchainement des morphos
+		CHRONO_CYCLE(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+		CHRONO_CYCLE(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+
+		free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
+		free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
+		free_vui8matrix(D2, vi0-1,vi1+1,vj0-1,vj1+1);
+		free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
+		free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
+
+
+		for(int i = IMAGE_ID0; i < IMAGE_ID1; i++)
+		{
+			sprintf(buffer, "./car3/car_%i.pgm", i);
+			MLoadPGM_ui8matrix(buffer, i0, i1, j0, j1, (uint8**)I);
+
+			CHRONO_CYCLE(sigma_delta_SIMD_iteration_prodcons_openmp_collapsed(I,M,O,V,E,n,vi0,vi1,vj0,vj1),nb_cycles);
+
+			// Ajout du bord à la sortie SD
+			cpy= (vuint8**)ui8matrix(i0 -1, i1 +1, j0 -1, j1+1);
+			copy_ui8matrix_ui8matrix((uint8**)E, i0, i1, j0, j1, (uint8**)cpy);
+
+			// Enchainement des morphos
+			CHRONO_CYCLE(E1 = erosion_SIMD_openmp(cpy, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D1 = dilatation_SIMD_openmp(E1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(D2 = dilatation_SIMD_openmp(D1, vi0, vi1, vj0, vj1) ,nb_cycles);
+			CHRONO_CYCLE(E2 = erosion_SIMD_openmp(D2, vi0, vi1, vj0, vj1) ,nb_cycles);
+
+			free_vui8matrix(E1, vi0-1,vi1+1,vj0-1,vj1+1);
+			free_vui8matrix(E2, vi0-1,vi1+1,vj0-1,vj1+1);
+			free_vui8matrix(D2, vi0-1,vi1+1,vj0-1,vj1+1);
+			free_vui8matrix(D1, vi0-1,vi1+1,vj0-1,vj1+1);
+			free_vui8matrix(cpy, vi0-1,vi1+1,vj0-1,vj1+1);
+		}
+		printf("sigma_delta_SIMD_iteration_prodcons_openmp_collapsed+E-D-D-E_simd_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 		sigma_delta_SIMD_free(I,M,O,V,E,i0,i1,j0,j1);
 	}
 

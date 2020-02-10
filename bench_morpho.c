@@ -6,7 +6,7 @@
 
 int main()
 {
-	printf("Algorithme\t\tCycles\t\tPoints\t\tppc\n");
+	printf("Algorithme\t\tCycles\t\tPoints\t\tcpp\n");
 
 	int i0, i1, j0, j1;
 	char buffer[100];
@@ -25,9 +25,9 @@ int main()
 		nb_cycles = 0;
 		uint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(E = erosion(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("erosion\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(E, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -38,9 +38,9 @@ int main()
 		nb_cycles = 0;
 		uint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_reduction(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_reduction(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("erosion_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(E, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -51,9 +51,9 @@ int main()
 		nb_cycles = 0;
 		uint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("erosion_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(E, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -64,9 +64,9 @@ int main()
 		nb_cycles = 0;
 		uint8** E;
 
-		CHRONO_CYCLE_AARCH64(E = erosion_openmp(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(E = erosion_openmp(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("erosion_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("erosion_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(E, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -77,9 +77,9 @@ int main()
 		nb_cycles = 0;
 		uint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(D, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -90,9 +90,9 @@ int main()
 		nb_cycles = 0;
 		uint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_reduction(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_reduction(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_reduction\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(D, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -103,9 +103,9 @@ int main()
 		nb_cycles = 0;
 		uint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_reduction_deroulage(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_reduction_deroulage\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(D, i0-1,i1+1,j0-1,j1+1);
 	}
@@ -116,9 +116,9 @@ int main()
 		nb_cycles = 0;
 		uint8** D;
 
-		CHRONO_CYCLE_AARCH64(D = dilatation_openmp(m,i0,i1,j0,j1),nb_cycles);
+		CHRONO_CYCLE(D = dilatation_openmp(m,i0,i1,j0,j1),nb_cycles);
 
-		printf("dilatation_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_points/(nb_cycles + 0.0));
+		printf("dilatation_openmp\t\t%llu\t\t%u\t\t%f\n", nb_cycles, nb_points, nb_cycles/(nb_points + 0.0));
 
 		free_ui8matrix(D, i0-1,i1+1,j0-1,j1+1);
 	}
