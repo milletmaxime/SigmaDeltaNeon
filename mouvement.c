@@ -1,6 +1,11 @@
 #include "algo.h"
 #include "nrdef.h"
 #include "nrutil.h"
+#include "mouvement.h"
+
+/* ***************** *
+ * SANS OPTIMISATION *
+ * ***************** */
 
 void sigma_delta_iteration(uint8** I, uint8** M, uint8** O, uint8** V, uint8** E, uint8 N, int i0, int i1, int j0, int j1)
 {
@@ -58,7 +63,11 @@ void sigma_delta_iteration(uint8** I, uint8** M, uint8** O, uint8** V, uint8** E
 	}
 }
 
+/* ******************************************* *
+ * PRODUCTEUR CONSOMMATEUR (FUSION DE BOUCLES) *
+ * ******************************************* */
 
+// Corps de la double boucle pour une itération
 static inline void sigma_delta_prodcons_loop(int x, int y, uint8** I, uint8** M, uint8** O, uint8** V, uint8** E, uint8 N)
 {
 	uint8 gtz, gt, lt, m, i, v, no;
@@ -127,6 +136,11 @@ void sigma_delta_iteration_prodcons_openmp_collapsed(uint8** I, uint8** M, uint8
 		}
 	}
 }
+
+
+/* ***************************** *
+ * INITIALISATION et DESTRUCTION *
+ * ***************************** */
 
 
 void sigma_delta_initialisation(uint8** src, uint8*** I, uint8*** M, uint8*** O, uint8*** V, uint8*** E, int i0, int i1, int j0, int j1)

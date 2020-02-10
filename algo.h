@@ -3,15 +3,17 @@
 #ifndef __ALGO_H__
 #define __ALGO_H__
 
-#define Vmin 1
+#define Vmin 0
 #define Vmax 255
+
+#define NB_REPETITION_BENCH 25
 
 //Inspiré de :
 //https://github.com/google/benchmark/blob/master/src/cycleclock.h
-static unsigned int cycleclock_aarch64()
+static unsigned long long cycleclock_aarch64()
 {
 	#if defined(__aarch64__)
-		unsigned int cycle;
+		unsigned long long cycle;
 		asm volatile("mrs %0, cntvct_el0" : "=r"(cycle));
 		return cycle;
 	#else
@@ -19,20 +21,11 @@ static unsigned int cycleclock_aarch64()
 	#endif
 }
 
-#define NRUN 4
-#define NITER 100
-#define CHRONO_CYCLE_AARCH64(X,t)					\
+#define CHRONO_CYCLE_AARCH64(X,chrono)				\
 {													\
-	double tmin = 1e38;								\
-	for(int run=0; run<NRUN; run++) {				\
-		double t0 = (double)cycleclock_aarch64();	\
-		for(int iter=0; iter<NITER; iter++) {		\
-			X;										\
-		}											\
-		double t1 = (double)cycleclock_aarch64();	\
-		double dt=t1-t0; if(dt<tmin) tmin = dt;		\
-	}												\
-	t = tmin / (double) NITER;						\
+	unsigned long long 	t0 = cycleclock_aarch64();	\
+	X;												\
+	chrono += cycleclock_aarch64() - t0;				\
 }
 
 #endif
