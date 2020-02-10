@@ -1,7 +1,9 @@
 #include "algo.h"
 #include "nrdef.h"
 #include "nrutil.h"
+#include "morpho.h"
 
+// Max de trois valeurs
 static inline uint8 max3(uint8 a, uint8 b, uint8 c)
 {
 	uint8 cmp, tmp;
@@ -9,6 +11,7 @@ static inline uint8 max3(uint8 a, uint8 b, uint8 c)
 	cmp = -((tmp - c) > 0); return (cmp & tmp) | (~cmp & c);
 }
 
+// Min de trois valeurs
 static inline uint8 min3(uint8 a, uint8 b, uint8 c)
 {
 	uint8 cmp, tmp;
@@ -16,6 +19,7 @@ static inline uint8 min3(uint8 a, uint8 b, uint8 c)
 	cmp = -((tmp - c) < 0); return (cmp & tmp) | (~cmp & c);
 }
 
+// Ajouter bordure dans une matrice de vuint8
 static inline void set_border(uint8** m, int i0, int i1, int j0, int j1, uint8 value, int width_border)
 {
 	for(int i = i0 - width_border ; i <= i1 + width_border ; i++)
@@ -27,6 +31,10 @@ static inline void set_border(uint8** m, int i0, int i1, int j0, int j1, uint8 v
 		}
 	}
 }
+
+/* ************************* *
+ * EROSION SANS OPTIMISATION *
+ * ************************* */
 
 uint8** erosion(uint8** m, int i0, int i1, int j0, int j1)
 {
@@ -47,6 +55,7 @@ uint8** erosion(uint8** m, int i0, int i1, int j0, int j1)
 	return res;
 }
 
+// Avec openmp
 uint8** erosion_openmp(uint8** m, int i0, int i1, int j0, int j1)
 {
 	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
@@ -66,6 +75,10 @@ uint8** erosion_openmp(uint8** m, int i0, int i1, int j0, int j1)
 
 	return res;
 }
+
+/* ********************** *
+ * EROSION AVEC REDUCTION *
+ * ********************** */
 
 uint8** erosion_reduction(uint8** m, int i0, int i1, int j0, int j1)
 {
@@ -99,6 +112,10 @@ uint8** erosion_reduction(uint8** m, int i0, int i1, int j0, int j1)
 
 	return res;
 }
+
+/* *********************************** *
+ * EROSION AVEC REDUCTION ET DEROULAGE *
+ * *********************************** */
 
 uint8** erosion_reduction_deroulage(uint8** m, int i0, int i1, int j0, int j1)
 {
@@ -155,6 +172,10 @@ uint8** erosion_reduction_deroulage(uint8** m, int i0, int i1, int j0, int j1)
 	return res;
 }
 
+/* **************************** *
+ * DILATATION SANS OPTIMISATION *
+ * **************************** */
+
 uint8** dilatation(uint8** m, int i0, int i1, int j0, int j1)
 {
 	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
@@ -174,6 +195,7 @@ uint8** dilatation(uint8** m, int i0, int i1, int j0, int j1)
 	return res;
 }
 
+// Avec openmp
 uint8** dilatation_openmp(uint8** m, int i0, int i1, int j0, int j1)
 {
 	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
@@ -193,6 +215,10 @@ uint8** dilatation_openmp(uint8** m, int i0, int i1, int j0, int j1)
 	
 	return res;
 }
+
+/* ************************* *
+ * DILATATION AVEC REDUCTION *
+ * ************************* */
 
 uint8** dilatation_reduction(uint8** m, int i0, int i1, int j0, int j1)
 {
@@ -226,6 +252,10 @@ uint8** dilatation_reduction(uint8** m, int i0, int i1, int j0, int j1)
 	
 	return res;
 }
+
+/* ************************************** *
+ * DILATATION AVEC REDUCTION ET DEROULAGE *
+ * ************************************** */
 
 uint8** dilatation_reduction_deroulage(uint8** m, int i0, int i1, int j0, int j1)
 {
@@ -281,6 +311,7 @@ uint8** dilatation_reduction_deroulage(uint8** m, int i0, int i1, int j0, int j1
 	
 	return res;
 }
+
 
 /*
 #include <stdio.h>

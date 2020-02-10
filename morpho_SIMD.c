@@ -3,6 +3,7 @@
 #include "vnrutil.h"
 #include "nrutil.h"
 
+// Ajouter bordure dans une matrice de vuint8
 static inline void set_border(vuint8** m, int vi0, int vi1, int vj0, int vj1, vuint8 value, int width_border)
 {
 	for(int i = vi0 - width_border ; i <= vi1 + width_border ; i++)
@@ -15,6 +16,11 @@ static inline void set_border(vuint8** m, int vi0, int vi1, int vj0, int vj1, vu
 	}
 }
 
+/* ************************* *
+ * EROSION SANS OPTIMISATION *
+ * ************************* */
+
+// Corps de la double boucle pour une itération
 static inline vuint8 erosion_SIMD_loop(vuint8** m, int i, int j)
 {
 	// vg = Vecteur à gauche, vm = Vecteur au milieu, vd = Vecteur à droite
@@ -73,6 +79,10 @@ vuint8** erosion_SIMD_openmp(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 	return res;
 }
 
+/* ********************** *
+ * EROSION AVEC REDUCTION *
+ * ********************** */
+
 vuint8** erosion_SIMD_reduction(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 {
 	vuint8** res = vui8matrix(vi0 -1, vi1 +1, vj0 -1, vj1 +1);
@@ -116,6 +126,11 @@ vuint8** erosion_SIMD_reduction(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 	}
 	return res;
 }
+
+
+/* *********************************** *
+ * EROSION AVEC REDUCTION ET DEROULAGE *
+ * *********************************** */
 
 vuint8** erosion_SIMD_reduction_deroulage(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 {
@@ -193,6 +208,11 @@ vuint8** erosion_SIMD_reduction_deroulage(vuint8** m, int vi0, int vi1, int vj0,
 	return res;
 }
 
+/* **************************** *
+ * DILATATION SANS OPTIMISATION *
+ * **************************** */
+
+// Corps de la double boucle pour une itération
 static inline vuint8 dilatation_SIMD_loop(vuint8** m, int i, int j)
 {
 	// vg = Vecteur à gauche, vm = Vecteur au milieu, vd = Vecteur à droite
@@ -219,7 +239,6 @@ static inline vuint8 dilatation_SIMD_loop(vuint8** m, int i, int j)
 					)
 				);
 	}
-
 
 vuint8** dilatation_SIMD(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 {
@@ -251,6 +270,10 @@ vuint8** dilatation_SIMD_openmp(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 	}
 	return res;
 }
+
+/* ************************* *
+ * DILATATION AVEC REDUCTION *
+ * ************************* */
 
 vuint8** dilatation_SIMD_reduction(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 {
@@ -295,6 +318,10 @@ vuint8** dilatation_SIMD_reduction(vuint8** m, int vi0, int vi1, int vj0, int vj
 	}
 	return res;
 }
+
+/* ************************************** *
+ * DILATATION AVEC REDUCTION ET DEROULAGE *
+ * ************************************** */
 
 vuint8** dilatation_SIMD_reduction_deroulage(vuint8** m, int vi0, int vi1, int vj0, int vj1)
 {
@@ -371,6 +398,8 @@ vuint8** dilatation_SIMD_reduction_deroulage(vuint8** m, int vi0, int vi1, int v
 	}
 	return res;
 }
+
+
 
 /*
 int main() {
