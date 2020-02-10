@@ -47,6 +47,26 @@ uint8** erosion(uint8** m, int i0, int i1, int j0, int j1)
 	return res;
 }
 
+uint8** erosion_openmp(uint8** m, int i0, int i1, int j0, int j1)
+{
+	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
+	
+	set_border(m, i0, i1, j0, j1, Vmax, 1);
+	
+	#pragma omp parallel for
+	for(int i = i0 ; i <= i1 ; i++)
+	{
+		for(int j = j0 ; j <= j1 ; j++)
+		{
+			res[i][j] = min3(min3(m[i-1][j-1], m[i-1][j  ], m[i-1][j+1]), 
+							min3(m[i  ][j-1], m[i  ][j  ], m[i  ][j+1]), 
+							min3(m[i+1][j-1], m[i+1][j  ], m[i+1][j+1]));	
+		}
+	}
+
+	return res;
+}
+
 uint8** erosion_reduction(uint8** m, int i0, int i1, int j0, int j1)
 {
 	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
@@ -154,6 +174,26 @@ uint8** dilatation(uint8** m, int i0, int i1, int j0, int j1)
 	return res;
 }
 
+uint8** dilatation_openmp(uint8** m, int i0, int i1, int j0, int j1)
+{
+	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
+
+	set_border(m, i0, i1, j0, j1, Vmin, 1);
+
+	#pragma omp parallel for
+	for(int i = i0 ; i <= i1 ; i++)
+	{
+		for(int j = j0 ; j <= j1 ; j++)
+		{	
+			res[i][j] = max3(max3(m[i-1][j-1], m[i-1][j  ], m[i-1][j+1]), 
+							max3(m[i  ][j-1], m[i  ][j  ], m[i  ][j+1]), 
+							max3(m[i+1][j-1], m[i+1][j  ], m[i+1][j+1]));	
+		}
+	}
+	
+	return res;
+}
+
 uint8** dilatation_reduction(uint8** m, int i0, int i1, int j0, int j1)
 {
 	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
@@ -242,57 +282,11 @@ uint8** dilatation_reduction_deroulage(uint8** m, int i0, int i1, int j0, int j1
 	return res;
 }
 
-uint8** erosion_dilatation(uint8** m, int i0, int i1, int j0, int j1)
-{	
-	uint8** res = ui8matrix(i0 -1, i1 +1, j0 -1, j1 +1);
-	
-	set_border(m, i0, i1, j0, j1, Vmin, 1);
-	
-	uint8 col1m1, col10, col11, col12, col13;
-	uint8 col2m1, col20, col21, col22, col23;
-	uint8 col3m1, col30, col31, col32, col33;
-	
-	for(int i = i0 ; i <= i1 ; i++)
-	{
-		for(int j = j0 ; j <= j1 ; j+=3)
-		{//erosion=min
-			col1m1 = min3(m[i-1][j-2], m[i  ][j-2], m[i+1][j-2]);
-			col10 = min3(m[i-1][j-1], m[i  ][j-1], m[i+1][j-1]);
-			col11 = min3(m[i-1][j  ], m[i  ][j  ], m[i+1][j  ]);
-			col12 = min3(m[i-1][j+1], m[i  ][j+1], m[i+1][j+1]);
-			col13 = min3(m[i-1][j+2], m[i  ][j+2], m[i+1][j+2]);
-
-			col2m1 = min3(m[i  ][j-2], m[i+1][j-2], m[i+2][j-2]);
-			col20 = min3(m[i  ][j-1], m[i+1][j-1], m[i+2][j-1]);
-			col21 = min3(m[i  ][j  ], m[i+1][j  ], m[i+2][j  ]);
-			col22 = min3(m[i  ][j+1], m[i+1][j+1], m[i+2][j+1]);
-			col23 = min3(m[i  ][j+2], m[i+1][j+2], m[i+2][j+2]);
-
-			col3m1 = min3(m[i+1][j-2], m[i+2][j-2], m[i+3][j-2]);
-			col30 = min3(m[i+1][j-1], m[i+2][j-1], m[i+3][j-1]);
-			col31 = min3(m[i+1][j  ], m[i+2][j  ], m[i+3][j  ]);
-			col32 = min3(m[i+1][j+1], m[i+2][j+1], m[i+3][j+1]);
-			col33 = min3(m[i+1][j+2], m[i+2][j+2], m[i+3][j+2]);
-			
-			res[i-1][j-1] = min3(col10, col20, col30);
-			res[i-1][j  ] = min3(col10, col20, col30);
-			res[i-1][j+1] = min3(col10, col20, col30);
-			
-			res[i  ][j-1] = min3(col1m0, col10, col11);
-			res[i  ][j  ] = min3(col10, col11, col12);
-			res[i  ][j+1] = min3(col11, col12, col13);
-			
-			res[i+1][j-1] = min3(col10, col20, col30);
-			res[i+1][j  ] = min3(col10, col20, col30);
-			res[i+1][j+1] = min3(col10, col20, col30);
-		}
-	}
-}
-
-
+/*
+#include <stdio.h>
 int main() {
 	
-	int m =4;
+	int m =150;
 	
 	uint8** test = ui8matrix(0 -1, m +1, 0 -1, m +1);
 	test[0][0] = 66;
@@ -315,12 +309,24 @@ int main() {
 	test[3][2] = 22;
 	test[3][3] = 33;
 	
-	display_ui8matrix(test,0,m,0,m,"%d\t","norm");
-	display_ui8matrix(erosion(test, 0,m,0,m),0,m,0,m,"%d\t","erod");
-	display_ui8matrix(erosion_reduction(test, 0,m,0,m),0,m,0,m,"%d\t","erodr");
-	display_ui8matrix(erosion_reduction_deroulage(test, 0,m,0,m),0,m,0,m,"%d\t","erodrd");
-	display_ui8matrix(dilatation(test, 0,m,0,m),0,m,0,m,"%d\t","dila");
-	display_ui8matrix(dilatation_reduction(test, 0,m,0,m),0,m,0,m,"%d\t","dilar");
-	display_ui8matrix(dilatation_reduction_deroulage(test, 0,m,0,m),0,m,0,m,"%d\t","dilard");
+
+    double cycles;
+    
+	CHRONO_CYCLE_AARCH64(erosion(test, 0,m,0,m),cycles);
+	printf("cycles = %f\n",  cycles);
+	
+	cycles = 0;
+	CHRONO_CYCLE_AARCH64(dilatation(test, 0,m,0,m),cycles);
+	printf("cycles = %f\n",  cycles);
+	cycles = 0;
+	CHRONO_CYCLE_AARCH64(dilatation_reduction(test, 0,m,0,m),cycles);
+	printf("cycles = %f\n",  cycles);
+	cycles = 0;
+	CHRONO_CYCLE_AARCH64(dilatation_reduction_deroulage(test, 0,m,0,m),cycles);
+	printf("cycles = %f\n",  cycles);
+	
+	
+	
 	return 0;
 }
+*/
