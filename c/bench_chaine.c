@@ -27,8 +27,6 @@ int main()
 
 	// Pour morphos
 	uint8 **E1, **D1, **D2, **E2;
-	
-	printf(">>> %llu\n", nb_cycles);
 
 	// SD et morpho sans optimisations
 	for(int i = 0; i<NB_REPETITION_BENCH; i++)
